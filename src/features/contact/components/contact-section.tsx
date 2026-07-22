@@ -127,12 +127,12 @@ export function ContactSection() {
             <div>
               <h3 className="text-xl font-bold text-foreground mb-4">Social Profiles</h3>
               <div className="flex gap-4">
-                <Button variant="outline" asChild className="border-border hover:bg-card">
+                <Button variant="outline"  className="border-border hover:bg-card">
                   <a href={portfolioConfig.personal.socials.github} target="_blank" rel="noopener noreferrer">
                     GitHub
                   </a>
                 </Button>
-                <Button variant="outline" asChild className="border-border hover:bg-card">
+                <Button variant="outline"  className="border-border hover:bg-card">
                   <a href={portfolioConfig.personal.socials.linkedin} target="_blank" rel="noopener noreferrer">
                     LinkedIn
                   </a>

@@ -57,10 +57,10 @@ export function HeroSection() {
         </p>
         
         <div ref={ctaRef} className="flex flex-wrap gap-4">
-          <Button size="lg" asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button size="lg"  className="bg-primary text-primary-foreground hover:bg-primary/90">
             <a href="#projects">View Projects</a>
           </Button>
-          <Button size="lg" variant="outline" asChild className="border-border hover:bg-card">
+          <Button size="lg" variant="outline"  className="border-border hover:bg-card">
             <a href="#contact">Contact Me</a>
           </Button>
         </div>

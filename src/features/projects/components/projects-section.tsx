@@ -8,8 +8,11 @@ import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+interface ProjectsSectionProps {
+  isVen?: boolean;
+}
 
-export function ProjectsSection() {
+export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +54,11 @@ export function ProjectsSection() {
           <p className="text-muted-foreground text-lg max-w-2xl">
             A selection of projects that showcase my expertise in architecture, performance, and user experience.
           </p>
+          {isVen ? (
+            <p className="text-secondary text-sm mt-4 max-w-2xl">
+              Estás viendo contenido adaptado para usuarios desde Venezuela.
+            </p>
+          ) : null}
         </div>
 
         {/* Horizontal scroll container */}

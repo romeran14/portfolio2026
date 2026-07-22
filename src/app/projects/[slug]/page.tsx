@@ -50,7 +50,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           {/* Back Navigation */}
           <Link
             href="/#projects"
-            className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8"
+            //className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8"
           >
             ← Back to Projects
           </Link>
@@ -89,14 +89,14 @@ export default async function ProjectPage({ params }: { params: { slug: string }
               </div>
               <div className="flex gap-4 items-center">
                 {project.links.live && (
-                  <Button asChild>
+                  <Button>
                     <a href={project.links.live} target="_blank" rel="noopener noreferrer">
                       View Live
                     </a>
                   </Button>
                 )}
                 {project.links.github && (
-                  <Button variant="outline" asChild className="border-border">
+                  <Button variant="outline"  className="border-border">
                     <a href={project.links.github} target="_blank" rel="noopener noreferrer">
                       View Source
                     </a>
