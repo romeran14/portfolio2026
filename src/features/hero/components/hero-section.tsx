@@ -39,7 +39,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <SectionWrapper id="hero" pin className="bg-background" aria-label="Hero Section">
+    <SectionWrapper id="hero"  className="bg-background" aria-label="Hero Section">
       <div ref={containerRef} className="flex flex-col justify-center h-full max-w-4xl mx-auto">
         <h1 
           ref={titleRef}

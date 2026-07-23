@@ -16,7 +16,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <main className="flex-1 flex flex-col w-full overflow-hidden">
+      <main className="flex-1 flex flex-col w-full">
         <HeroSection />
         <ExperienceSection />
         <ProjectsSection isVen={isVen} />

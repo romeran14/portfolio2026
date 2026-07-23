@@ -139,52 +139,52 @@ export const experience: Experience[] =
 
 const projectsData: z.input<typeof projectListSchema> = [
   {
-    slug: "mammo",
-    title: "Mammo",
+    slug: "rappard",
+    title: "George Rappard MD",
     summary:
-      "Sales of digital mammography machines, installation, service, parts supply, and training.",
+      "GeorgeRappardMD.com was created for patients and potential patients of George Rappard, MD. The internet is an amazing repository of knowledge and information.",
     description:
-      "A commercial website for Mammo featuring equipment sales, installation services, parts supply, maintenance, and training offerings.",
+      "A commercial website for medical articless, medical services  and training offerings.",
     role: "Frontend Developer",
     challenge:
-      "Creating a professional Joomla-based brochure site that clearly explains medical equipment offerings and support services.",
+      "Creating a professional Joomla-based brochure site that clearly explains medical services.",
     solution:
       "Built a structured Joomla website with service sections, product details, and easy access to contact information.",
     impact:
-      "Improved the client’s online presence and made it easier for buyers to understand available equipment and support services.",
+      "Improved the client’s online presence and made it easier for clients to understand offered services",
     technologies: ["Joomla", "PHP", "HTML", "CSS", "SEO"],
     links: {
-      live: "https://mammo.com/",
+      live: "https://www.georgerappardmd.com/",
     },
     images: {
-      thumbnail: "/projects_images/mammo.jpg",
+      thumbnail: "/projects_images/rappard.png",
     },
     featured: true,
-    order: 0,
+    order: 1,
   },
   {
     slug: "san-diego-criminal-attorney",
-    title: "San Diego Criminal Attorney",
+    title: "San francisco Professional License Defense Attorneys",
     summary:
       "A law firm website that presents experience, client trust, and criminal defense services.",
     description:
-      "A Joomla-based website built for a criminal defense law firm to showcase services, team expertise, and contact options.",
+      "A Wordpress-based website built for a criminal defense law firm to showcase services, team expertise, and contact options.",
     role: "Frontend Developer",
     challenge:
       "Designing a trustworthy legal website with a strong service-focused structure and easy access to consultation requests.",
     solution:
-      "Delivered a Joomla site with clear service pages, attorney information, and strong calls to action that reinforced credibility.",
+      "Delivered a Wordpress site with clear service pages, attorney information, and strong calls to action that reinforced credibility.",
     impact:
       "Strengthened the client’s online credibility and improved lead generation through a more modern and clear layout.",
-    technologies: ["Joomla", "PHP", "HTML", "CSS", "SEO"],
+    technologies: ["Wordpress", "PHP", "HTML", "CSS", "SEO"],
     links: {
-      live: "https://www.sandiego-criminalattorney.com/",
+      live: "https://www.sanfranlicenselawyer.com/",
     },
     images: {
-      thumbnail: "/projects_images/san_diego.PNG",
+      thumbnail: "/projects_images/san_francisco.jpg",
     },
     featured: true,
-    order: 1,
+    order:2,
   },
   {
     slug: "suarez-physical-therapy",
@@ -208,7 +208,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/suarez.jpg",
     },
     featured: true,
-    order: 2,
+    order: 3,
   },
   {
     slug: "fake-twitter",
@@ -240,7 +240,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/twitter.jpg",
     },
     featured: true,
-    order: 3,
+    order: 6,
   },
   {
     slug: "criptotapp",
@@ -263,8 +263,8 @@ const projectsData: z.input<typeof projectListSchema> = [
     images: {
       thumbnail: "/projects_images/cripto.jpg",
     },
-    featured: false,
-    order: 4,
+    featured: true,
+    order: 8,
   },
   {
     slug: "mdx-technical-test",
@@ -287,8 +287,8 @@ const projectsData: z.input<typeof projectListSchema> = [
     images: {
       thumbnail: "/projects_images/mdx.jpg",
     },
-    featured: false,
-    order: 5,
+    featured: true,
+    order: 7,
   },
   {
     slug: "teslo-shop",
@@ -319,8 +319,8 @@ const projectsData: z.input<typeof projectListSchema> = [
     images: {
       thumbnail: "/projects_images/teslo_shop.PNG",
     },
-    featured: false,
-    order: 6,
+    featured: true,
+    order: 9,
   },
   {
     slug: "pluspalm",
@@ -343,14 +343,14 @@ const projectsData: z.input<typeof projectListSchema> = [
     images: {
       thumbnail: "/projects_images/exopalm.png",
     },
-    featured: false,
-    order: 7,
+    featured: true,
+    order: 0,
   },
   {
     slug: "old-portfolio",
     title: "Old Portfolio",
     summary:
-      "A previous portfolio from 2022 showcasing early projects and developer growth.",
+      "A previous portfolio I didn't finished because the desing was made by  me and certains sections were bad imagined",
     description:
       "An older personal portfolio that highlights early work, design evolution, and project experience.",
     role: "Frontend Developer",
@@ -360,15 +360,63 @@ const projectsData: z.input<typeof projectListSchema> = [
       "Built a compact portfolio site with project summaries, visuals, and contact information.",
     impact:
       "Served as an early portfolio that helped secure new freelance and full-time opportunities.",
-    technologies: ["React", "JavaScript", "CSS", "HTML"],
+    technologies: ["React", "JavaScript", "gsap", "three.js"],
     links: {
-      live: "https://portfolio-romeran-14.vercel.app/",
+      live: "https://portfolio-three-296t.vercel.app/",
     },
     images: {
-      thumbnail: "/projects_images/porfolio.PNG",
+      thumbnail: "/projects_images/portfolio.jpg",
+    },
+    featured: true,
+    order: 8,
+  },
+  {
+    slug: "ventactiva",
+    title: "Ventactiva",
+    summary:
+      "An administrative platform for lottery agency owners, serving around 6,000 active users.",
+    description:
+      "A management platform for lottery agency owners to handle operations, client data and reporting across a network of thousands of users.",
+    role: "Full Stack Developer",
+    challenge:
+      "Building an administrative dashboard that scales for lottery agency owners and supports a large user base.",
+    solution:
+      "Implemented a responsive admin platform with data-driven controls, reporting tools, and a workflow optimized for lottery agency operations.",
+    impact:
+      "Enabled a network of approximately 6,000 users to manage lottery agency operations more efficiently.",
+    technologies: ["React", "Next.js", "Laravel", "SQL"],
+    links: {
+      live: "https://www.ventactiva.com/",
+    },
+    images: {
+      thumbnail: "/projects_images/venta_activa.jpg",
+    },
+    featured:false,
+    order: 4,
+  },
+  {
+    slug: "pote-lottoactivo",
+    title: "Pote Lottoactivo",
+    summary:
+      "A landing experience for Pote Lottoactivo that showcases lottery participation and promotional messaging.",
+    description:
+      "A promotional site for Pote Lottoactivo that communicates lottery draw details, rules, and engagement touchpoints.",
+    role: "Frontend Developer",
+    challenge:
+      "Designing an engaging landing page that balances promotional visuals with clear user guidance.",
+    solution:
+      "Implemented a responsive landing experience with bold messaging, structured sections, and easy navigation.",
+    impact:
+      "Delivered a polished web presence for Pote Lottoactivo that supports user interest and platform discovery.",
+    technologies: ["React", "Next.js", "Laravel",  "Tailwind CSS"],
+    links: {
+      live: "https://pote.lottoactivo.com/",
+    },
+    images: {
+      thumbnail: "/projects_images/pote_millonario.jpg",
     },
     featured: false,
-    order: 8,
+    order: 5,
   },
 ];
 

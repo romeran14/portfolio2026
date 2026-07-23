@@ -7,18 +7,21 @@ import { portfolioConfig } from "@/lib/config/portfolio.config";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 interface ProjectsSectionProps {
   isVen?: boolean;
 }
 
+
+
 export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
+
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-
-
-
+  let projects = [...portfolioConfig.projects].sort((a, b) => a.order - b.order)
+  projects = isVen ? projects.filter((project) => project.featured === false)  : projects;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -54,11 +57,6 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
           <p className="text-muted-foreground text-lg max-w-2xl">
             A selection of projects that showcase my expertise in architecture, performance, and user experience.
           </p>
-          {isVen ? (
-            <p className="text-secondary text-sm mt-4 max-w-2xl">
-              Estás viendo contenido adaptado para usuarios desde Venezuela.
-            </p>
-          ) : null}
         </div>
 
         {/* Horizontal scroll container */}
@@ -66,7 +64,7 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
           ref={scrollContainerRef}
           className="flex gap-8 px-6 pb-12 w-max"
         >
-          {portfolioConfig.projects.map((project) => (
+          {projects.map((project) => (
             <Link 
               key={project.slug} 
               href={`/projects/${project.slug}`}
@@ -77,9 +75,13 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
                 <div className="aspect-[16/9] w-full bg-muted relative overflow-hidden">
                   {/* Fallback pattern since we don't have real images yet */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-background opacity-50 group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-mono text-sm">
-                    {project.slug}.webp
-                  </div>
+                  <Image
+                    src={project.images.thumbnail}
+                    alt={project.slug}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    fill
+                    className="absolute inset-0 object-cover"
+                  />
                 </div>
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-4">
