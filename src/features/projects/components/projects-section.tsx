@@ -21,7 +21,7 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   let projects = [...portfolioConfig.projects].sort((a, b) => a.order - b.order)
-  projects = isVen ? projects.filter((project) => project.featured === false)  : projects;
+  projects = isVen ? projects.filter((project) => project.featured === true)  : projects;
 
 
 
