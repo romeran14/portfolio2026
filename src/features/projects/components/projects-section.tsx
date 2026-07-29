@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, ViewTransition } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 import { portfolioConfig } from "@/lib/config/portfolio.config";
@@ -22,6 +22,8 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
 
   let projects = [...portfolioConfig.projects].sort((a, b) => a.order - b.order)
   projects = isVen ? projects.filter((project) => project.featured === false)  : projects;
+
+
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -68,20 +70,25 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
             <Link 
               key={project.slug} 
               href={`/projects/${project.slug}`}
+              transitionTypes={['nav-forward']}
               className="group block w-[85vw] md:w-[600px] flex-shrink-0"
-              style={{ viewTransitionName: `project-card-${project.slug}` }}
+
             >
               <Card className="h-full bg-card/50 border-border overflow-hidden hover:border-primary transition-colors duration-300">
                 <div className="aspect-[16/9] w-full bg-muted relative overflow-hidden">
                   {/* Fallback pattern since we don't have real images yet */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-background opacity-50 group-hover:scale-105 transition-transform duration-700" />
-                  <Image
-                    src={project.images.thumbnail}
-                    alt={project.slug}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    fill
-                    className="absolute inset-0 object-cover"
-                  />
+                  <ViewTransition name={`project-card-${project.slug}`} share="morph">
+                    <Image
+                      src={project.images.thumbnail}
+                      alt={project.slug}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      fill
+                      className="w-full h-full object-cover block"
+                       //placeholder="blur"
+                      
+                    />
+                  </ViewTransition>
                 </div>
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-4">

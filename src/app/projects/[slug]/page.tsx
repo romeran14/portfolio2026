@@ -1,5 +1,7 @@
+import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { portfolioConfig } from "@/lib/config/portfolio.config";
 import { generateProjectMetadata } from "@/lib/seo/metadata";
 import { generateProjectJsonLd } from "@/lib/seo/json-ld";
@@ -7,6 +9,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
 
 export async function generateStaticParams() {
   return portfolioConfig.projects.map((project) => ({
@@ -49,7 +52,10 @@ export default async function ProjectPage({ params }: { params: { slug: string }
         <article className="container mx-auto px-6 max-w-4xl">
           {/* Back Navigation */}
           <Link
-            href="/#projects"
+            href="/"
+            scroll={true}
+            transitionTypes={['nav-back']}
+            
             //className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8"
           >
             ← Back to Projects
@@ -58,11 +64,25 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           {/* Hero Image / Thumbnail */}
           <div
             className="w-full aspect-[21/9] bg-muted mb-12 relative overflow-hidden rounded-lg border border-border"
-            style={{ viewTransitionName: `project-card-${project.slug}` }}
+            
           >
-             <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-mono">
-                {project.slug}.webp
-             </div>
+            <ViewTransition name={`project-card-${project.slug}`}share="morph" default="none">
+              <Image 
+                src={project.images.thumbnail}
+                alt={project.slug}
+               /* sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                fill
+                className="absolute inset-0 object-cover"*/
+
+                                fill
+              className="object-contain"
+              priority
+              sizes="(max-width: 1024px) 100vw, 80vw"
+             // placeholder="blur"
+              />
+            </ViewTransition>
+
+
           </div>
 
           {/* Header Metadata */}
