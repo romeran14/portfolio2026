@@ -32,7 +32,7 @@ export const navigation: NavItem[] = [
 const personalData = {
   name: "Romeran Rodriguez",
   title: "Senior FullStack Developer",
-  bio: "FullStack Developer with 6+ years of experience building scalable web applications. Specialized in React, Next.js, TypeScript, Nest.js, and Laravel. Passionate about clean architecture, performance optimization, and crafting immersive user experiences with advanced animations and motion design.",
+  bio: "FullStack Developer with 6+ years of experience building scalable web applications. Specialized in React, Next.js, TypeScript, Nest.js, and Laravel.",
   shortBio:
     "Senior FullStack Developer with 6+ years building scalable web apps with React, Next.js, TypeScript, Nest.js & Laravel.",
   location: "Maracaibo, Venezuela",
@@ -160,6 +160,30 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/rappard.png",
     },
     featured: true,
+    order: 2,
+  },
+  {
+    slug: "family-dentistry",
+    title: "Family Dentistry",
+    summary:
+      "A WordPress website for a dental clinic that highlights services, patient care, and appointment booking.",
+    description:
+      "A WordPress site built to showcase dental services, oral health education, and easy appointment scheduling.",
+    role: "WordPress Developer",
+    challenge:
+      "Presenting a professional dental website with a patient-friendly service structure and clear contact pathways.",
+    solution:
+      "Built a WordPress website with service sections, team profiles, patient resources, and simple appointment CTAs.",
+    impact:
+      "Improved the clinic’s online visibility and made it easier for patients to find services and request appointments.",
+    technologies: ["WordPress", "PHP", "HTML", "CSS", "SEO"],
+    links: {
+      live: "https://www.familydentistry.com/",
+    },
+    images: {
+      thumbnail: "/projects_images/so-cal.jpg",
+    },
+    featured: true,
     order: 1,
   },
   {
@@ -184,7 +208,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/san_francisco.jpg",
     },
     featured: true,
-    order:2,
+    order: 3,
   },
   {
     slug: "suarez-physical-therapy",
@@ -208,7 +232,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/suarez.jpg",
     },
     featured: true,
-    order: 3,
+    order: 4,
   },
   {
     slug: "fake-twitter",
@@ -240,7 +264,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/twitter.jpg",
     },
     featured: true,
-    order: 6,
+    order: 7,
   },
   {
     slug: "criptotapp",
@@ -288,7 +312,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/mdx.jpg",
     },
     featured: true,
-    order: 7,
+    order: 10,
   },
   {
     slug: "teslo-shop",
@@ -320,7 +344,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/teslo_shop.PNG",
     },
     featured: true,
-    order: 9,
+    order: 11,
   },
   {
     slug: "pluspalm",
@@ -368,7 +392,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/portfolio.jpg",
     },
     featured: true,
-    order: 8,
+    order: 9,
   },
   {
     slug: "ventactiva",
@@ -392,7 +416,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/venta_activa.jpg",
     },
     featured:false,
-    order: 4,
+    order: 5,
   },
   {
     slug: "pote-lottoactivo",
@@ -416,7 +440,7 @@ const projectsData: z.input<typeof projectListSchema> = [
       thumbnail: "/projects_images/pote_millonario.jpg",
     },
     featured: false,
-    order: 5,
+    order: 6,
   },
 ];
 

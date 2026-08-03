@@ -18,19 +18,19 @@ export function HeroSection() {
 
       tl.fromTo(
         titleRef.current,
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, delay: 0.2 }
+        { y: 50, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 1, delay: 0.2 }
       )
         .fromTo(
           subtitleRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8 },
+          { y: 30, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.8 },
           "-=0.6"
         )
         .fromTo(
           ctaRef.current,
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6 },
+          { y: 20, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.6 },
           "-=0.4"
         );
     }, containerRef);
@@ -40,10 +40,10 @@ export function HeroSection() {
 
   return (
     <SectionWrapper id="hero"  className="bg-background" aria-label="Hero Section">
-      <div ref={containerRef} className="flex flex-col justify-center h-full max-w-4xl mx-auto">
+      <div ref={containerRef} className="flex flex-col justify-center h-full max-w-4xl mx-auto ">
         <h1 
           ref={titleRef}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-foreground mb-6"
+          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-foreground mb-6 opacity-0 translate-y-[50px] will-change-[transform,opacity]"
         >
           {portfolioConfig.personal.name}.<br />
           <span className="text-primary">{portfolioConfig.personal.title}</span>
@@ -51,12 +51,12 @@ export function HeroSection() {
         
         <p 
           ref={subtitleRef}
-          className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl leading-relaxed"
+          className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl leading-relaxed opacity-0 translate-y-[30px] will-change-[transform,opacity]"
         >
           {portfolioConfig.personal.bio}
         </p>
         
-        <div ref={ctaRef} className="flex flex-wrap gap-4">
+        <div ref={ctaRef} className="flex flex-wrap gap-4 opacity-0 translate-y-[20px] will-change-[transform,opacity]">
           <Button size="lg"  className="bg-primary text-primary-foreground hover:bg-primary/90">
             <a href="#projects">View Projects</a>
           </Button>

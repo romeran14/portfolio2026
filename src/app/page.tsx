@@ -17,7 +17,7 @@ export default async function Home() {
     <>
       <Header />
       <main className="flex-1 flex flex-col w-full">
-       <HeroSection />
+        <HeroSection />
         <ExperienceSection /> 
         <ProjectsSection isVen={isVen} />
         <ContactSection />

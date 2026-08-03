@@ -18,8 +18,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  // Fix for Next.js 15: await params if it's treated as a Promise in some contexts, but statically it's usually fine.
-  // We'll await it to be safe in App Router
+
   const { slug } = await Promise.resolve(params);
   return generateProjectMetadata(slug);
 }
@@ -53,10 +52,10 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           {/* Back Navigation */}
           <Link
             href="/"
-            scroll={true}
+            scroll={false}
             transitionTypes={['nav-back']}
             
-            //className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8"
+            className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8"
           >
             ← Back to Projects
           </Link>
@@ -66,7 +65,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
             className="w-full aspect-[21/9] bg-muted mb-12 relative overflow-hidden rounded-lg border border-border"
             
           >
-            <ViewTransition name={`project-card-${project.slug}`}share="morph" default="none">
+            <ViewTransition name={`project-card-${project.slug}`} share="morph">
               <Image 
                 src={project.images.thumbnail}
                 alt={project.slug}
@@ -74,8 +73,8 @@ export default async function ProjectPage({ params }: { params: { slug: string }
                 fill
                 className="absolute inset-0 object-cover"*/
 
-                                fill
-              className="object-contain"
+              fill
+              className="object-cover"
               priority
               sizes="(max-width: 1024px) 100vw, 80vw"
              // placeholder="blur"
@@ -101,7 +100,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
                 <h3 className="text-sm font-medium text-muted-foreground mb-1">Tech Stack</h3>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {project.technologies.map((tech) => (
-                    <Badge key={tech} variant="secondary" className="bg-card">
+                    <Badge key={tech} variant="outline" className="bg-card">
                       {tech}
                     </Badge>
                   ))}

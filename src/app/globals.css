@@ -128,15 +128,15 @@
     @apply font-sans;
   }
 }
-/*
+
 ::view-transition-group(.morph) {
-  animation-duration: 400ms;
+  animation-duration: 800ms;
 }
 ::view-transition-image-pair(.morph) {
   animation-name: via-blur;
 }
 @keyframes via-blur {
   30% {
-    filter: blur(3px);
+    filter: blur(2px);
   }
-}*/
+}

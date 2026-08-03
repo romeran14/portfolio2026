@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, ViewTransition } from "react";
+import { useLayoutEffect, useRef, ViewTransition } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 import { portfolioConfig } from "@/lib/config/portfolio.config";
@@ -8,6 +8,7 @@ import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { useProjectScrollRestoration } from "@/lib/hooks/use-project-scroll-restoration";
 
 interface ProjectsSectionProps {
   isVen?: boolean;
@@ -25,7 +26,7 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
 
 
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const scrollContainer = scrollContainerRef.current;
       if (!scrollContainer) return;
@@ -51,6 +52,8 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
     return () => ctx.revert();
   }, []);
 
+  const { saveScrollPosition } = useProjectScrollRestoration();
+
   return (
     <SectionWrapper id="projects" className="bg-background overflow-hidden" aria-label="Projects Portfolio">
       <div ref={containerRef} className="w-full h-screen flex flex-col justify-center">
@@ -71,6 +74,7 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
               key={project.slug} 
               href={`/projects/${project.slug}`}
               transitionTypes={['nav-forward']}
+              onClick={saveScrollPosition}
               className="group block w-[85vw] md:w-[600px] flex-shrink-0"
 
             >
@@ -104,7 +108,7 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {project.technologies.slice(0, 4).map((tech) => (
-                      <Badge key={tech} variant="secondary" className="bg-background">
+                      <Badge key={tech} variant="outline" className="bg-background">
                         {tech}
                       </Badge>
                     ))}

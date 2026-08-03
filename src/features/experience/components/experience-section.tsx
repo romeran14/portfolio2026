@@ -110,12 +110,12 @@ export function ExperienceSection() {
                       </ul>
                       <div className="flex flex-wrap gap-2">
                         {exp.technologies.slice(0, 5).map((tech) => (
-                          <Badge key={tech} variant="secondary" className="bg-card text-foreground">
+                          <Badge key={tech} variant="outline" className="bg-card text-foreground">
                             {tech}
                           </Badge>
                         ))}
                         {exp.technologies.length > 5 && (
-                          <Badge variant="secondary" className="bg-card text-foreground">
+                          <Badge variant="outline" className="bg-card text-foreground">
                             +{exp.technologies.length - 5}
                           </Badge>
                         )}
