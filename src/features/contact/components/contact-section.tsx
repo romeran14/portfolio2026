@@ -1,25 +1,61 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { FormEvent, useState } from "react";
+import Script from "next/script";
 import { portfolioConfig } from "@/lib/config/portfolio.config";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+declare global {
+  interface Window {
+    grecaptcha?: {
+      ready: (callback: () => void) => void;
+      execute: (siteKey: string, options: { action: string }) => Promise<string>;
+    };
+  }
+}
+
 export function ContactSection() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [recaptchaReady, setRecaptchaReady] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(() =>
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? null : "reCAPTCHA key is not configured."
+  );
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function loadRecaptchaToken(): Promise<string> {
+    if (!siteKey) {
+      throw new Error("Missing reCAPTCHA site key");
+    }
+
+  
+    if (typeof window === "undefined" || !window.grecaptcha) {
+      throw new Error("reCAPTCHA is not ready");
+    }
+
+    return new Promise((resolve, reject) => {
+      const grecaptcha = window.grecaptcha;
+      grecaptcha?.ready(() => {
+        grecaptcha
+          .execute(siteKey, { action: "contact_form" })
+          .then((token: string) => resolve(token))
+          .catch((error: unknown) => reject(error));
+      });
+    });
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("submitting");
-
-    const formData = new FormData(e.currentTarget);
-    // You need to replace this with your actual Web3Forms access key
-    // Register at https://web3forms.com/
-    formData.append("access_key", "YOUR_ACCESS_KEY_HERE");
+    setRecaptchaError(null);
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const token = await loadRecaptchaToken();
+      const formData = new FormData(e.currentTarget);
+      formData.append("recaptchaToken", token);
+
+      const response = await fetch("/api/contact", {
         method: "POST",
         body: formData,
       });
@@ -31,14 +67,22 @@ export function ContactSection() {
         (e.target as HTMLFormElement).reset();
       } else {
         setStatus("error");
+        setRecaptchaError(data.error || "Something went wrong. Please try again.");
       }
     } catch (error) {
       setStatus("error");
+      setRecaptchaError("reCAPTCHA validation failed. Please refresh the page.");
     }
   }
 
   return (
-    <SectionWrapper id="contact" className="bg-card/30 py-24" aria-label="Contact">
+    <>
+      <Script
+        src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
+        strategy="lazyOnload"
+        onLoad={() => setRecaptchaReady(true)}
+      />
+      <SectionWrapper id="contact" className="bg-card/30 py-24" aria-label="Contact">
       <div className="max-w-5xl mx-auto w-full">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Let&apos;s Work Together</h2>
@@ -101,7 +145,14 @@ export function ContactSection() {
                   <p className="text-sm text-green-500 text-center mt-4">Message sent successfully!</p>
                 )}
                 {status === "error" && (
-                  <p className="text-sm text-destructive text-center mt-4">Something went wrong. Please try again.</p>
+                  <p className="text-sm text-destructive text-center mt-4">
+                    {recaptchaError ?? "Something went wrong. Please try again."}
+                  </p>
+                )}
+                {!recaptchaReady && !recaptchaError && (
+                  <p className="text-sm text-muted-foreground text-center mt-4">
+                    Loading reCAPTCHA... please wait.
+                  </p>
                 )}
               </form>
             </CardContent>
@@ -143,5 +194,6 @@ export function ContactSection() {
         </div>
       </div>
     </SectionWrapper>
+    </>
   );
 }
