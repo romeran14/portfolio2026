@@ -24,17 +24,20 @@ function isOriginAllowed(request: Request) {
   const originHeader = request.headers.get("origin") ?? request.headers.get("referer");
 
   if (!originHeader) {
+    console.error("Origin or Referer header is missing");
     return false;
   }
 
   try {
     const origin = new URL(originHeader).origin;
+
     const allowedOrigins = [
       contactConfig.liveUrl,
       "http://localhost:3000",
       "http://127.0.0.1:3000",
     ];
 
+    console.log("Origin:", origin, "Allowed Origins:", allowedOrigins);
     return allowedOrigins.includes(origin);
   } catch {
     return false;
@@ -69,7 +72,7 @@ async function verifyRecaptcha(token: string) {
     response: token,
   });
 
-  console.log("PAYLOAD", payload.toString());
+ 
   const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
     method: "POST",
     headers: {
@@ -79,14 +82,11 @@ async function verifyRecaptcha(token: string) {
   });
   
   if (!response.ok) {
-    console.error("Failed to verify reCAPTCHA:", response.statusText);
     return { success: false, error: "reCAPTCHA verification failed" };
   }
 
   const data = await response.json();
-  console.log("DATA", data);
   if (!data.success || data.score === undefined || data.action !== "contact_form") {
-    console.error("DATA:", data, payload);
     return { success: false, error: "JUJU  reCAPTCHA validation failed" };
   }
 
@@ -112,19 +112,14 @@ export async function POST(request: Request) {
       { status: 429 }
     );
   }
-  //console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", request);
+
   const formData = await request.json();
-  //console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",  formData);
-  /*const requestBody = Object.fromEntries(
-    Array.from(formData.entries()).filter(([, value]) => typeof value === "string")
-  ) as Record<string, string>;*/
 
   const parsed = contactFormSchema.safeParse({
     token: formData.token,
   });
    
   if (!parsed.success) {
-    console.log()
     return NextResponse.json(
       {
         success: false,
@@ -134,7 +129,7 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
-  console.log("BBBBBBBBBBBBBBBBBBBBBBBB");
+
   const recaptchaResult = await verifyRecaptcha(parsed.data.token);
   if (!recaptchaResult.success) {
     return NextResponse.json(
