@@ -8,8 +8,8 @@ const rateLimitMap = new Map<string, { count: number; firstRequestAt: number }>(
 
 const contactFormSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  email: z.string().email(),
-  message: z.string().trim().min(10).max(2000),
+  email: z.string().trim().max(100),
+  message: z.string().trim().min(10).max(1000),
   recaptchaToken: z.string().min(1),
 });
 
@@ -67,6 +67,8 @@ function isRateLimited(ip: string) {
 }
 
 async function verifyRecaptcha(token: string) {
+  
+    console.log("verifyRecaptcha");
   const payload = new URLSearchParams({
     secret: contactConfig.recaptchaSecretKey,
     response: token,
@@ -79,19 +81,21 @@ async function verifyRecaptcha(token: string) {
     },
     body: payload,
   });
-
+  
   if (!response.ok) {
+    console.error("Failed to verify reCAPTCHA:", response.statusText);
     return { success: false, error: "reCAPTCHA verification failed" };
   }
 
   const data = await response.json();
-
+  console.log("DATA", data);
   if (!data.success || data.score === undefined || data.action !== "contact_form") {
-    return { success: false, error: "reCAPTCHA validation failed" };
+    console.error("DATA:", data);
+    return { success: false, error: "JUJU  reCAPTCHA validation failed" };
   }
 
   if (data.score < 0.5) {
-    return { success: false, error: "reCAPTCHA score too low" };
+    return { success: false, error: "SCORE reCAPTCHA score too low" };
   }
 
   return { success: true };
@@ -117,7 +121,8 @@ export async function POST(request: Request) {
   const requestBody = Object.fromEntries(
     Array.from(formData.entries()).filter(([, value]) => typeof value === "string")
   ) as Record<string, string>;
-
+  
+  //console.log("Received form data:", requestBody); // Log the received form data for debugging
   const parsed = contactFormSchema.safeParse({
     name: requestBody.name,
     email: requestBody.email,
@@ -126,11 +131,12 @@ export async function POST(request: Request) {
   });
 
   if (!parsed.success) {
+    console.error("Form validation failed:", parsed.error); // Log validation errors for debugging
     return NextResponse.json(
       {
         success: false,
         error: "Invalid form data",
-        fields: parsed.error.flatten().fieldErrors,
+        fields: parsed.error,
       },
       { status: 400 }
     );
@@ -138,6 +144,7 @@ export async function POST(request: Request) {
 
   const recaptchaResult = await verifyRecaptcha(parsed.data.recaptchaToken);
   if (!recaptchaResult.success) {
+    console.error("FALLO AQUI", recaptchaResult.error); // Log reCAPTCHA errors for debugging
     return NextResponse.json(
       { success: false, error: recaptchaResult.error },
       { status: 400 }
@@ -150,6 +157,7 @@ export async function POST(request: Request) {
   payload.append("email", parsed.data.email);
   payload.append("message", parsed.data.message);
 
+  console.log("body",payload)
   const response = await fetch(contactConfig.emailServiceUrl, {
     method: "POST",
     headers: {
@@ -157,9 +165,9 @@ export async function POST(request: Request) {
     },
     body: payload,
   });
-
+ console.log("RESPONSE", contactConfig.emailServiceUrl, response);
   const data = await response.json();
-
+  // Log the response from the email service for debugging
   if (!response.ok || !data.success) {
     return NextResponse.json(
       { success: false, error: data.error || "Contact form submission failed" },

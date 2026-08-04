@@ -45,21 +45,26 @@ export function ContactSection() {
     });
   }
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e) {
+    console.log("Form submitted:", e,  typeof e); // Log the event to see its structure
+    
     e.preventDefault();
     setStatus("submitting");
     setRecaptchaError(null);
 
     try {
       const token = await loadRecaptchaToken();
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(e.target);
       formData.append("recaptchaToken", token);
+      console.log("token", token);
+      console.log("Form data:", Object.fromEntries(formData.entries())); // Log the form data before sending
 
       const response = await fetch("/api/contact", {
         method: "POST",
         body: formData,
       });
-
+       
+      console.log("Response from /api/contact:", response); // Log the response object
       const data = await response.json();
 
       if (data.success) {
@@ -70,6 +75,7 @@ export function ContactSection() {
         setRecaptchaError(data.error || "Something went wrong. Please try again.");
       }
     } catch (error) {
+      console.log(error)
       setStatus("error");
       setRecaptchaError("reCAPTCHA validation failed. Please refresh the page.");
     }
