@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { contactConfig } from "@/lib/config/contact.config";
+import { contactConfig } from "@/lib/config/contact-form.config";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const rateLimitMap = new Map<string, { count: number; firstRequestAt: number }>();
 
 const contactFormSchema = z.object({
-  name: z.string().trim().min(2).max(100),
-  email: z.string().trim().max(100),
-  message: z.string().trim().min(10).max(1000),
-  recaptchaToken: z.string().min(1),
+  token: z.string().min(1),
 });
 
 function getClientIp(request: Request) {
@@ -67,13 +64,12 @@ function isRateLimited(ip: string) {
 }
 
 async function verifyRecaptcha(token: string) {
-  
-    console.log("verifyRecaptcha");
   const payload = new URLSearchParams({
     secret: contactConfig.recaptchaSecretKey,
     response: token,
   });
 
+  console.log("PAYLOAD", payload.toString());
   const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
     method: "POST",
     headers: {
@@ -90,7 +86,7 @@ async function verifyRecaptcha(token: string) {
   const data = await response.json();
   console.log("DATA", data);
   if (!data.success || data.score === undefined || data.action !== "contact_form") {
-    console.error("DATA:", data);
+    console.error("DATA:", data, payload);
     return { success: false, error: "JUJU  reCAPTCHA validation failed" };
   }
 
@@ -116,62 +112,34 @@ export async function POST(request: Request) {
       { status: 429 }
     );
   }
-
-  const formData = await request.formData();
-  const requestBody = Object.fromEntries(
+  //console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", request);
+  const formData = await request.json();
+  //console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",  formData);
+  /*const requestBody = Object.fromEntries(
     Array.from(formData.entries()).filter(([, value]) => typeof value === "string")
-  ) as Record<string, string>;
-  
-  //console.log("Received form data:", requestBody); // Log the received form data for debugging
-  const parsed = contactFormSchema.safeParse({
-    name: requestBody.name,
-    email: requestBody.email,
-    message: requestBody.message,
-    recaptchaToken: requestBody.recaptchaToken,
-  });
+  ) as Record<string, string>;*/
 
+  const parsed = contactFormSchema.safeParse({
+    token: formData.token,
+  });
+   
   if (!parsed.success) {
-    console.error("Form validation failed:", parsed.error); // Log validation errors for debugging
+    console.log()
     return NextResponse.json(
       {
         success: false,
         error: "Invalid form data",
-        fields: parsed.error,
+        fields: parsed.error.flatten(),
       },
       { status: 400 }
     );
   }
-
-  const recaptchaResult = await verifyRecaptcha(parsed.data.recaptchaToken);
+  console.log("BBBBBBBBBBBBBBBBBBBBBBBB");
+  const recaptchaResult = await verifyRecaptcha(parsed.data.token);
   if (!recaptchaResult.success) {
-    console.error("FALLO AQUI", recaptchaResult.error); // Log reCAPTCHA errors for debugging
     return NextResponse.json(
       { success: false, error: recaptchaResult.error },
       { status: 400 }
-    );
-  }
-
-  const payload = new URLSearchParams();
-  payload.append("access_key", contactConfig.emailKey);
-  payload.append("name", parsed.data.name);
-  payload.append("email", parsed.data.email);
-  payload.append("message", parsed.data.message);
-
-  console.log("body",payload)
-  const response = await fetch(contactConfig.emailServiceUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: payload,
-  });
- console.log("RESPONSE", contactConfig.emailServiceUrl, response);
-  const data = await response.json();
-  // Log the response from the email service for debugging
-  if (!response.ok || !data.success) {
-    return NextResponse.json(
-      { success: false, error: data.error || "Contact form submission failed" },
-      { status: response.ok ? 500 : response.status }
     );
   }
 

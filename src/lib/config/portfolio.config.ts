@@ -36,10 +36,10 @@ const personalData = {
   shortBio:
     "Senior FullStack Developer with 6+ years building scalable web apps with React, Next.js, TypeScript, Nest.js & Laravel.",
   location: "Maracaibo, Venezuela",
-  phone: "+584126923306",
+  phone: "+58 4126923306",
   socials: {
     github: "https://github.com/romeran14",
-    linkedin: "https://linkedin.com/in/romeran-rodriguez",
+    linkedin: "https://www.linkedin.com/in/romeran-rodriguez-pacheco-93b844156/",
     email: "romeran14@gmail.com",
   },
 } satisfies z.input<typeof personalSchema>;

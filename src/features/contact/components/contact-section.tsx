@@ -3,6 +3,7 @@
 import { SubmitEvent, useState } from "react";
 import Script from "next/script";
 import { portfolioConfig } from "@/lib/config/portfolio.config";
+import { contactConfig } from "@/lib/config/contact-form.config";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,75 +20,67 @@ declare global {
 export function ContactSection() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [recaptchaReady, setRecaptchaReady] = useState(false);
-  const [recaptchaError, setRecaptchaError] = useState<string | null>(() =>
-    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? null : "reCAPTCHA key is not configured."
-  );
-  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
 
-  async function loadRecaptchaToken(): Promise<string> {
-    if (!siteKey) {
-      throw new Error("Missing reCAPTCHA site key");
-    }
 
-  
-    if (typeof window === "undefined" || !window.grecaptcha) {
-      throw new Error("reCAPTCHA is not ready");
-    }
 
-    return new Promise((resolve, reject) => {
-      const grecaptcha = window.grecaptcha;
-      grecaptcha?.ready(() => {
-        grecaptcha
-          .execute(siteKey, { action: "contact_form" })
-          .then((token: string) => resolve(token))
-          .catch((error: unknown) => reject(error));
-      });
-    });
-  }
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
-    console.log("Form submitted:", e,  typeof e); // Log the event to see its structure
-    
     e.preventDefault();
     setStatus("submitting");
     setRecaptchaError(null);
 
+    const form = e.currentTarget;
+
     try {
       const token = await loadRecaptchaToken();
-      const formData = new FormData(e.target);
-      formData.append("recaptchaToken", token);
-      console.log("token", token);
-      console.log("Form data:", Object.fromEntries(formData.entries())); // Log the form data before sending
 
-      const response = await fetch("/api/contact", {
+      const verificationResponse = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({ token }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-       
-      console.log("Response from /api/contact:", response); // Log the response object
-      const data = await response.json();
 
-      if (data.success) {
-        setStatus("success");
-        (e.target as HTMLFormElement).reset();
-      } else {
-        setStatus("error");
-        setRecaptchaError(data.error || "Something went wrong. Please try again.");
+      const verificationData = await verificationResponse.json();
+
+      if (!verificationResponse.ok || !verificationData.success) {
+        throw new Error(verificationData.error || "reCAPTCHA verification failed");
       }
+
+      const emailFormData = new FormData(form);
+      emailFormData.append("access_key", contactConfig.emailKey);
+
+      const emailResponse = await fetch(contactConfig.emailServiceUrl, {
+        method: "POST",
+        body: emailFormData,
+      });
+
+      const emailData = await emailResponse.json();
+
+      if (!emailResponse.ok || !emailData.success) {
+        throw new Error(emailData.error || "Unable to send your message right now.");
+      }
+
+      setStatus("success");
+      form.reset();
     } catch (error) {
-      console.log(error)
       setStatus("error");
-      setRecaptchaError("reCAPTCHA validation failed. Please refresh the page.");
+      setRecaptchaError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     }
   }
 
   return (
     <>
+     
       <Script
-        src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
+        src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`}
         strategy="lazyOnload"
         onLoad={() => setRecaptchaReady(true)}
       />
+ 
+
       <SectionWrapper id="contact" className="bg-card/30 py-24" aria-label="Contact">
       <div className="max-w-5xl mx-auto w-full">
         <div className="text-center mb-16">
@@ -99,10 +92,9 @@ export function ContactSection() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Form */}
           <Card className="bg-background border-border">
             <CardContent className="p-8">
-              <form onSubmit={(e) =>  handleSubmit(e)} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
                     Name
@@ -139,14 +131,14 @@ export function ContactSection() {
                     className="w-full bg-card border border-border rounded-md px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6"
-                  disabled={status === "submitting"}
+                  disabled={status === "submitting" || !recaptchaReady }
                 >
                   {status === "submitting" ? "Sending..." : "Send Message"}
                 </Button>
-                
+
                 {status === "success" && (
                   <p className="text-sm text-green-500 text-center mt-4">Message sent successfully!</p>
                 )}
@@ -155,20 +147,14 @@ export function ContactSection() {
                     {recaptchaError ?? "Something went wrong. Please try again."}
                   </p>
                 )}
-                {!recaptchaReady && !recaptchaError && (
-                  <p className="text-sm text-muted-foreground text-center mt-4">
-                    Loading reCAPTCHA... please wait.
-                  </p>
-                )}
               </form>
             </CardContent>
           </Card>
 
-          {/* Contact Info & Links */}
           <div className="flex flex-col justify-center space-y-8">
             <div>
               <h3 className="text-xl font-bold text-foreground mb-2">Email</h3>
-              <a 
+              <a
                 href={`mailto:${portfolioConfig.personal.socials.email}`}
                 className="text-muted-foreground hover:text-primary transition-colors text-lg"
               >
@@ -184,12 +170,12 @@ export function ContactSection() {
             <div>
               <h3 className="text-xl font-bold text-foreground mb-4">Social Profiles</h3>
               <div className="flex gap-4">
-                <Button variant="outline"  className="border-border hover:bg-card">
+                <Button variant="outline" className="border-border hover:bg-card">
                   <a href={portfolioConfig.personal.socials.github} target="_blank" rel="noopener noreferrer">
                     GitHub
                   </a>
                 </Button>
-                <Button variant="outline"  className="border-border hover:bg-card">
+                <Button variant="outline" className="border-border hover:bg-card">
                   <a href={portfolioConfig.personal.socials.linkedin} target="_blank" rel="noopener noreferrer">
                     LinkedIn
                   </a>
@@ -199,7 +185,30 @@ export function ContactSection() {
           </div>
         </div>
       </div>
-    </SectionWrapper>
+      </SectionWrapper>
     </>
   );
 }
+
+  const recaptchaSiteKey = contactConfig.recaptchaSiteKey;
+
+  async function loadRecaptchaToken(): Promise<string> {
+    if (!recaptchaSiteKey) {
+      throw new Error("Missing reCAPTCHA site key");
+    }
+
+    if (typeof window === "undefined" || !window.grecaptcha) {
+      throw new Error("reCAPTCHA is not ready");
+    }
+
+    const grecaptcha = window.grecaptcha;
+
+    return new Promise((resolve, reject) => {
+      grecaptcha?.ready(() => {
+        grecaptcha
+          .execute(recaptchaSiteKey, { action: "contact_form" })
+          .then((token) => resolve(token))
+          .catch((error: unknown) => reject(error));
+      });
+    });
+  }
