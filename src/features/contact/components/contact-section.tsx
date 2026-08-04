@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { SubmitEvent, useState } from "react";
 import Script from "next/script";
 import { portfolioConfig } from "@/lib/config/portfolio.config";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
@@ -45,7 +45,7 @@ export function ContactSection() {
     });
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     console.log("Form submitted:", e,  typeof e); // Log the event to see its structure
     
     e.preventDefault();
@@ -102,7 +102,7 @@ export function ContactSection() {
           {/* Contact Form */}
           <Card className="bg-background border-border">
             <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={(e) =>  handleSubmit(e)} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
                     Name
