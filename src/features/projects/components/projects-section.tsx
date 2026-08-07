@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, ViewTransition } from "react";
+import { useEffect, useRef, ViewTransition } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 import { portfolioConfig } from "@/lib/config/portfolio.config";
@@ -26,17 +26,16 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
 
 
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const ctx = gsap.context(() => {
       const scrollContainer = scrollContainerRef.current;
       if (!scrollContainer) return;
 
       const totalWidth = scrollContainer.scrollWidth;
       const viewportWidth = window.innerWidth;
-      
-      // Horizontal scroll animation
+
       gsap.to(scrollContainer, {
-        x: () => -(totalWidth - viewportWidth + 100), // 100px extra padding
+        x: () => -(totalWidth - viewportWidth + 100),
         ease: "none",
         scrollTrigger: {
           trigger: containerRef.current,
@@ -89,6 +88,7 @@ export function ProjectsSection({ isVen = false }: ProjectsSectionProps) {
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       fill
                       className="w-full h-full object-cover block"
+                      loading="lazy"
                        //placeholder="blur"
                       
                     />

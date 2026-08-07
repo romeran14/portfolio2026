@@ -19,10 +19,10 @@ export interface NavItem {
 }
 
 export const navigation: NavItem[] = [
-  { label: "Home", href: "#hero" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "../#hero" },
+  { label: "Experience", href: "../#experience" },
+  { label: "Projects", href: "../#projects" },
+  { label: "Contact", href: "../#contact" },
 ];
 
 // ---------------------------------------------------------------------------

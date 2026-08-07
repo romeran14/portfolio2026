@@ -24,7 +24,6 @@ function isOriginAllowed(request: Request) {
   const originHeader = request.headers.get("origin") ?? request.headers.get("referer");
 
   if (!originHeader) {
-    console.error("Origin or Referer header is missing");
     return false;
   }
 
@@ -37,7 +36,6 @@ function isOriginAllowed(request: Request) {
       "http://127.0.0.1:3000",
     ];
 
-    console.log("Origin:", origin, "Allowed Origins:", allowedOrigins);
     return allowedOrigins.includes(origin);
   } catch {
     return false;
@@ -87,11 +85,11 @@ async function verifyRecaptcha(token: string) {
 
   const data = await response.json();
   if (!data.success || data.score === undefined || data.action !== "contact_form") {
-    return { success: false, error: "JUJU  reCAPTCHA validation failed" };
+    return { success: false, error: "reCAPTCHA validation failed" };
   }
 
   if (data.score < 0.5) {
-    return { success: false, error: "SCORE reCAPTCHA score too low" };
+    return { success: false, error: "reCAPTCHA score too low" };
   }
 
   return { success: true };

@@ -27,7 +27,6 @@ export function useProjectScrollRestoration(
 
   const saveScrollPosition = useCallback(() => {
     
-    console.log(window.scrollY)
     sessionStorage.setItem(storageKey, String(window.scrollY));
   }, [storageKey]);
 

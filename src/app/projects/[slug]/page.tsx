@@ -69,15 +69,10 @@ export default async function ProjectPage({ params }: { params: { slug: string }
               <Image 
                 src={project.images.thumbnail}
                 alt={project.slug}
-               /* sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 fill
-                className="absolute inset-0 object-cover"*/
-
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 1024px) 100vw, 80vw"
-             // placeholder="blur"
+                className="object-cover"
+                priority
+                sizes="(max-width: 1024px) 100vw, 80vw"
               />
             </ViewTransition>
 
